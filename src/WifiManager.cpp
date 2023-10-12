@@ -3,8 +3,8 @@
 //
 #include "WifiManager.h"
 
-static const String ssid = "";
-static const String password = "";
+static const String ssid = "Bbox-1988C86B";
+static const String password = "la-maison-Anadele-69&Bella";
 
 WifiManager::WifiManager() : timeClient(ntpUDP) {
 }
