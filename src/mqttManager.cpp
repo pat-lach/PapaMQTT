@@ -1,14 +1,14 @@
 //
 // Created by damien on 08/10/23.
-//
+// modified by patrick with assistance of damien 11/10/2023
 
 #include "mqttManager.h"
 
 //static const String mqttUser = "papa";
 //static const String mqttPassword = "papa";
 static const String mqttTopicIn = "TopicESP/#";
-//static const String mqtt_server = "pat-lach-pil";                //adress ip de là ou est le brocker c a d mon pc (athena.argawaen.net)
-static const IPAddress mqtt_server = {192, 168, 1, 75};
+//static const String mqtt_server = "pat-lach-pil";
+static const IPAddress mqtt_server = {192, 168, 1, 75};//adress IP du PC "pat-lach-pil" ou est le brocker
 constexpr uint16_t mqtt_server_port = 1883;
 
 static IOManager *s_ioManager = nullptr;
@@ -49,7 +49,7 @@ static void callback(char *topic, byte *payload, unsigned int length) {
 MqttManager::MqttManager() : mqttClient(wifiClient) {}
 
 void MqttManager::setup() {
-	mqttClient.setServer(mqtt_server, mqtt_server_port);//mqtt_server.c_str() modif patrick en mqtt_server
+	mqttClient.setServer(mqtt_server, mqtt_server_port);//mqtt_server.c_str() modif patrick en mqtt_server with IP
 	mqttClient.setKeepAlive(5);
 	mqttClient.setCallback(callback);
 }
@@ -66,9 +66,6 @@ void MqttManager::connect() {
 
 	while (!mqttClient.connected()) {
 		Serial.print("Attempting MQTT connection...");
-		// Serial.print(mqtt_server.toString);//(mqtt_server.c_str()
-		Serial.print("  ");
-		Serial.print(mqtt_server_port);
 		String mqttClientId = "";
 		if (mqttClient.connect(mqttClientId.c_str())) {
 			Serial.println("connected");

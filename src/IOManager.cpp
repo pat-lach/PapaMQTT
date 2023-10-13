@@ -1,8 +1,9 @@
 //
 // Created by damien on 08/10/23.
-//
+// modified bt Patrick 12/10/2023, tout ok avec buton ou message MQTT
 
 #include "IOManager.h"
+#include "Wire.h"// add for I2C
 #include "mqttManager.h"
 
 IOManager::IOManager() = default;
@@ -16,16 +17,20 @@ void IOManager::setup() {
 }
 
 void IOManager::loop() {
-	if (digitalRead(PinRead) == HIGH) {
-		if (!switchState && mqttManager) {
-			mqttManager->senMessage("TopicESP/e1", "Switch On");
+	j = j + 1;
+	if (j >= 500) {
+		j = 0;
+		if (digitalRead(PinRead) == HIGH) {
+			if (!switchState && mqttManager) {
+				mqttManager->senMessage("TopicESP/order", "On");
+			}
+			switchState = true;
+		} else {
+			if (switchState && mqttManager) {
+				mqttManager->senMessage("TopicESP/order", "Off");
+			}
+			switchState = false;
 		}
-		switchState = true;
-	} else {
-		if (switchState && mqttManager) {
-			mqttManager->senMessage("TopicESP/e1", "Switch Off");
-		}
-		switchState = false;
 	}
 }
 
@@ -35,10 +40,10 @@ void IOManager::attachMqttManager(MqttManager *mngr) {
 
 void IOManager::setLEDState(bool on) {
 	if (on) {
-		digitalWrite(LEDPin, LOW);
+		digitalWrite(LEDPin, LOW);// led on
 		Serial.println("Setting led on");
 	} else {
-		digitalWrite(LEDPin, HIGH);
+		digitalWrite(LEDPin, HIGH);// led off
 		Serial.println("Setting led off");
 	}
 }

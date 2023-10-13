@@ -45,4 +45,6 @@ private:
 	uint8_t LEDPin = D5;
 	///  The last state of the switch
 	bool switchState = false;
+	///  The last state of the switch
+	uint32_t j = 0;
 };

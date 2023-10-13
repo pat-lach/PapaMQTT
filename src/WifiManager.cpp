@@ -1,9 +1,9 @@
 //
 // Created by damien on 08/10/23.
-//
+// modified by patrick 11/10/2023
 #include "WifiManager.h"
 
-static const String ssid = "Bbox-1988C86B";
+static const String ssid = "Bbox-1988C86B";// connection box patrick
 static const String password = "la-maison-Anadele-69&Bella";
 
 WifiManager::WifiManager() : timeClient(ntpUDP) {
