@@ -14,6 +14,7 @@ static bool looping = true;
 WifiManager netMngr;
 MqttManager mqttMngr;
 IOManager ioMngr;
+unsigned long Timeloop = 0;
 
 void setup() {
 	Serial.begin(115200);
@@ -26,9 +27,13 @@ void setup() {
 }
 
 void loop() {
+	//Timeloop = millis();
 	netMngr.loop();
 	mqttMngr.loop();
 	ioMngr.loop();
+	// Timeloop = millis() -Timeloop;
+	// Serial.print(" Timeloop: ");
+	// Serial.println(Timeloop);
 }
 
 #ifndef ARDUINO

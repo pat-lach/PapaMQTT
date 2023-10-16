@@ -30,7 +30,7 @@ static void callback(char *topic, byte *payload, unsigned int length) {
 	Serial.print(Topic);
 	Serial.print(" // ");
 	Serial.println(Payload);
-	if (Topic == "TopicESP/order") {
+	if (Topic == "TopicESP/order" || "TopicESP/bp1" ) {
 		if (Payload.equalsIgnoreCase("on")) {
 			if (s_ioManager) {
 				s_ioManager->setLEDState(true);
@@ -49,7 +49,7 @@ static void callback(char *topic, byte *payload, unsigned int length) {
 MqttManager::MqttManager() : mqttClient(wifiClient) {}
 
 void MqttManager::setup() {
-	mqttClient.setServer(mqtt_server, mqtt_server_port);//mqtt_server.c_str() modif patrick en mqtt_server with IP
+	mqttClient.setServer(mqtt_server, mqtt_server_port);
 	mqttClient.setKeepAlive(5);
 	mqttClient.setCallback(callback);
 }
