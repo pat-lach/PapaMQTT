@@ -26,23 +26,27 @@ static void callback(char *topic, byte *payload, unsigned int length) {
 	for (unsigned int i = 0; i < length; ++i) {
 		Payload.concat((char) payload[i]);
 	}
-	Serial.print("Received message: ");
+	Serial.print("  Received message: ");
 	Serial.print(Topic);
-	Serial.print(" // ");
-	Serial.println(Payload);
-	if (Topic == "TopicESP/order" || "TopicESP/bp1" ) {
-		if (Payload.equalsIgnoreCase("on")) {
+	Serial.print(" // '");
+	Serial.print(Payload);
+	Serial.println("'");
+	if ((Topic == "TopicESP/order") || (Topic == "TopicESP/bp1")) {
+		int id = Payload.toInt();
+		
+
+		//if (Payload.equalsIgnoreCase("on")) {
 			if (s_ioManager) {
-				s_ioManager->setLEDState(true);
+				s_ioManager->setLEDState(id, true);
 			}
-		} else if (Payload.equalsIgnoreCase("off")) {
-			if (s_ioManager) {
-				s_ioManager->setLEDState(false);
-			}
-		} else {
-			Serial.print("Invalid Payload: ");
-			Serial.println(Payload);
-		}
+		// } else if (Payload.equalsIgnoreCase("off")) {
+		// 	if (s_ioManager) {
+		// 		s_ioManager->setLEDState(id, false);
+		// 	}
+		// } else {
+		// 	Serial.print(" Invalid Payload: ");
+		// 	Serial.println(Payload);
+		// }
 	}
 }
 
@@ -87,7 +91,7 @@ void MqttManager::connect() {
 }
 
 void MqttManager::senMessage(String topic, String Payload) {
-	Serial.print("Sending Message: ");
+	Serial.print("  Sending Message: ");
 	Serial.print(topic);
 	Serial.print(" // ");
 	Serial.println(Payload);
