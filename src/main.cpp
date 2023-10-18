@@ -14,6 +14,7 @@ static bool looping = true;
 WifiManager netMngr;
 MqttManager mqttMngr;
 IOManager ioMngr;
+//unsigned long Timeloop = 0;
 
 void setup() {
 	Serial.begin(115200);
