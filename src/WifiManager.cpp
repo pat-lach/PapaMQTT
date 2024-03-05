@@ -1,4 +1,3 @@
-//
 // Created by damien on 08/10/23.
 // modified by patrick 11/10/2023
 #include "WifiManager.h"
