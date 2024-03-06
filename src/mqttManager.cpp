@@ -33,13 +33,13 @@ static void callback(char *topic, byte *payload, unsigned int length) {
 	Serial.println("'");
 	if (Topic == "Aig/Cde")  {     //if ((Topic == "Aig/Cde") || (Topic == "TopicESP/bp1")) {		
 		int id = Payload.toInt();
-		Serial.print("  int id ");
+		Serial.print("  id recieved ");
 		Serial.println(id);		
 			const byte CdeBobine[] = {11, 12, 21,22,31,32,33,34,41,42,51,52,61,62,63,64};
 			for (int i=0; i<16;i++)
 			{ if (CdeBobine[i] == id) 	{ 
 				id = i;
-				Serial.print("  new id ");
+				Serial.print("  new id for Output ");
 				Serial.println(id);	
 				}
 			}
@@ -49,7 +49,7 @@ static void callback(char *topic, byte *payload, unsigned int length) {
 		if (s_ioManager) {
 			s_ioManager->setLEDState(id, true);
 		}
-		 } else if (Payload.equalsIgnoreCase("off")) {
+		 } else if (Payload.equalsIgnoreCase("off")) {   // else if (Payload.equalsIgnoreCase("off")) {
 		 	if (s_ioManager) {
 		 		s_ioManager->setLEDState(id, false);
 		 	}
@@ -95,7 +95,7 @@ void MqttManager::connect() {
 			Serial.print(wifiClient.remoteIP().toString());
 			Serial.print(":");
 			Serial.println(wifiClient.remotePort());
-			delay(5000);
+			delay(2000);
 		}
 	}
 }

@@ -8,7 +8,7 @@
 #include <Adafruit_MCP23X17.h>// add for I2C & MCP23017
 #include <Wire.h>             // add for I2C GPIO 5 (D1) (SCL), GPIO 4 (D2) (SDA)
 
-constexpr uint64_t pulseTime = 700; // 500
+constexpr uint64_t pulseTime = 700;// 500
 
 Adafruit_MCP23X17 mcp1;// Adafruit_MCP23X17 mcp1;
 Adafruit_MCP23X17 mcp2;// Adafruit_MCP23X17 mcp2;
@@ -18,80 +18,77 @@ IOManager::IOManager() = default;
 void IOManager::setup() {
 	switchState = false;// all Switch off
 
-	Wire.begin(4 ,5);    // SDA d2 GPIO4, SCL d1 GPIO5, esp8266...Start I2C communication
+	Wire.begin(4, 5);// SDA d2 GPIO4, SCL d1 GPIO5, esp8266...Start I2C communication
 
-  /****************************************/
-  //          I2C Scanner
-  /********************************************************************/
-  byte error, address;
-  int nDevices;
+	/****************************************/
+	//          I2C Scanner
+	/********************************************************************/
+	byte error, address;
+	int nDevices;
 
-  Serial.println("Scanning...");
+	Serial.println("Scanning...");
 
-  nDevices = 0;
-  for(address = 1; address < 127; address++ ) 
-  {
-    // The i2c_scanner uses the return value of
-    // the Write.endTransmisstion to see if
-    // a device did acknowledge to the address.
-    Wire.beginTransmission(address);
-    error = Wire.endTransmission();
+	nDevices = 0;
 
-    if (error == 0)
-    {
-      Serial.print("I2C device found at address 0x");
-      if (address<16) 
-        Serial.print("0");
-      Serial.print(address,HEX);
-      Serial.println("  !");
+	for (address = 1; address < 127; address++) {
+		// The i2c_scanner uses the return value of
+		// the Write.endTransmisstion to see if
+		// a device did acknowledge to the address.
+		Wire.beginTransmission(address);
+		error = Wire.endTransmission();
 
-      nDevices++;
-    }
-    else if (error==4) 
-    {
-      Serial.print("Unknown error at address 0x");
-      if (address<16) 
-        Serial.print("0");
-      Serial.println(address,HEX);
-    }    
-  }
-  if (nDevices == 0)
-    Serial.println("No I2C devices found\n");
-  else
-    Serial.println("Scanning done\n");
+		if (error == 0) {
+			Serial.print("I2C device found at address 0x");
+			if (address < 16)
+				Serial.print("0");
+			Serial.print(address, HEX);
+			Serial.println("  !");
 
-  delay(1000);           // wait 1 seconds for next scan
+			nDevices++;
+		} else if (error == 4) {
+			Serial.print("Unknown error at address 0x");
+			if (address < 16)
+				Serial.print("0");
+			Serial.println(address, HEX);
+		}
+	}
+	if (nDevices == 0)
+		Serial.println("No I2C devices found\n");
+	else
+		Serial.println("Scanning done\n");
+
+	delay(1000);// wait 1 seconds for next scan
 
 
-/********************************************************************/
- //          Init mcp1  output & mcp2 input
-/********************************************************************/
+	/********************************************************************/
+	//          Init mcp1  output & mcp2 input
+	/********************************************************************/
 
 	mcp1.begin_I2C(0x20);// Instantiate mcp1: objectaddress 0
 	if (!mcp1.begin_I2C()) {
 		Serial.println(" Error.mcp1 ");// if (!mcp1.begin_SPI(CS_PIN)) { --> if use a spi version
 		while (1)
 			;
-	} 
-	Serial.println(" mcp1 Ok");	
+	}
+	Serial.println(" mcp1 Ok");
 
-	mcp2.begin_I2C(0x21);// Instantiate mcp2: objectaddress 1 
+	mcp2.begin_I2C(0x21);// Instantiate mcp2: objectaddress 1
 	if (!mcp2.begin_I2C()) {
 		Serial.println(" Error.mcp2 ");// if (!mcp2.begin_SPI(CS_PIN)) { --> if use a spi version
 		while (1)
 			;
 	}
-	Serial.println(" mcp2 Ok");	
+	Serial.println(" mcp2 Ok");
 
 	for (int n = 0; n < 16; n++)// configure Port A: pins 0..7/ Port B: pins 8..15
 	{
 		mcp1.pinMode(n, OUTPUT);
 		mcp1.digitalWrite(n, HIGH);// all setting off
 		delay(10);
-	} 
+	}
 	delay(15);
-	Serial.println( " setting mcp1 off (high) ");
-	Serial.println( " mcp1 à low ");
+	Serial.println(" setting mcp1 off (high) ");
+	Serial.println(" mcp1 à low ");
 
 	/*  for (int i = 0; i < 16; i++) {
 		mcp2.pinMode(i, INPUT_PULLUP); // init all HIGH		
@@ -103,7 +100,6 @@ void IOManager::setup() {
 		delay(10);		
 		}
 	Serial.println( " setting mcp2 input (high) "); */
-		
 }
 
 void IOManager::loop() {
@@ -111,11 +107,12 @@ void IOManager::loop() {
 		if ((millis() - pulseStop) >= pulseTime) {
 			setLEDState(timing, false);
 			Serial.print(pulseTime);
-		return; }
+			return;
+		}
 	}
 
 
-													/*	for (int i = 0; i < 16; i++) {
+	/*	for (int i = 0; i < 16; i++) {
 															int32_t iEtatPB = mcp2.digitalRead(0 + i);
 															Serial.print(" pin : ");
 															Serial.print( i);
@@ -124,7 +121,7 @@ void IOManager::loop() {
 															delay(10);
 															}  */
 
-		/* for (int8_t id = 0; id < 16; ++id) {
+	/* for (int8_t id = 0; id < 16; ++id) {
 		int32_t iEtatPB = mcp2.digitalRead(0 + id);
 		Serial.print(" id : ");
 		Serial.print( id);
@@ -140,7 +137,7 @@ void IOManager::loop() {
 		} 
 	}  */
 
-	  /* int32_t iEtatPB0 = mcp2.digitalRead(0);// lecture entrée PB0, front descendant mcp2 
+	/* int32_t iEtatPB0 = mcp2.digitalRead(0);// lecture entrée PB0, front descendant mcp2
 	 if ((iEtatPB0 != iEtatMemPB) && (iEtatPB0 == LOW) && (iNb == 0)) {
 	 	iNb++;
 	 	iEtatMemPB = iEtatPB0;
@@ -160,7 +157,7 @@ void IOManager::loop() {
 	 if (iEtatPB0 == HIGH) {// init une fois le Bp relaché
 	 	iNb = 0;
 	} */
- } 
+}
 
 void IOManager::attachMqttManager(MqttManager *mngr) {
 	mqttManager = mngr;
@@ -171,17 +168,17 @@ void IOManager::setLEDState(int8_t Id, bool on) {
 	if (on) {// digitalWrite(LEDPin, LOW);// led on
 		timing = Id;
 		Serial.print(" on: Id timing : ");
-		Serial.print( Id);
+		Serial.print(Id);
 		pulseStop = millis();
 		Serial.print(millis());
-		mcp1.digitalWrite(Id, LOW);      // Relais on     LOW
+		mcp1.digitalWrite(Id, LOW);// Relais on     LOW
 		Serial.print("  mcp1 on (Low) Id: ");
 		Serial.println(Id);
 
 
 	} else {
 		timing = -1;
-		mcp1.digitalWrite(Id, HIGH);     // Relais off    HIGH
+		mcp1.digitalWrite(Id, HIGH);// Relais off    HIGH
 		Serial.print(millis());
 		Serial.print("  mcp1 off (High) Id: ");
 		Serial.println(Id);
@@ -194,5 +191,5 @@ void IOManager::setLEDState(int8_t Id, bool on) {
 		Serial.print(" off All Id mcp1: ");
 		Serial.println(Id);
 		// delay(15); */
-	    }	
+	}
 }
